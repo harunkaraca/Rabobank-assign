@@ -21,6 +21,7 @@ junitKtx = "1.1.5"
 runner = "1.5.2"
 timberVersion = "5.0.1"
 truthVersion = "1.4.2"
+navigationVersion = "2.7.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -28,6 +29,8 @@ androidx-core-testing = { module = "androidx.arch.core:core-testing", version.re
 androidx-espresso-idling-resource = { module = "androidx.test.espresso:espresso-idling-resource", version.ref = "espressoCore" }
 androidx-idling-concurrent = { module = "androidx.test.espresso.idling:idling-concurrent", version.ref = "espressoVersion" }
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "archLifecycleVersion" }
+androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationVersion" }
+androidx-navigation-navigation-ui-ktx= { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationVersion" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "archLifecycleVersion" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomVersion" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glideVersion" }
