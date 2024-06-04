@@ -53,8 +53,12 @@ class MainFragment : Fragment() {
         }
         observeViewModel()
         binding.btnDownload.setOnClickListener {
-            viewModel.downloadFile(binding.etUrl.text.toString())
-            it.isEnabled=false
+            if(binding.etUrl.text.toString().isNotEmpty()){
+                viewModel.downloadFile(binding.etUrl.text.toString())
+                it.isEnabled=false
+            }else{
+                viewModel.showSnackbarMessage(getString(R.string.url_can_not_be_empty))
+            }
         }
         checkStoragePermission()
     }
@@ -77,15 +81,17 @@ class MainFragment : Fragment() {
             isLoading?.let {
                 binding.btnDownload.isEnabled=true
                 binding.clProgress.visibility=if(it)View.VISIBLE else View.GONE
-                if(it){
-                    binding.tvError.visibility=View.GONE
-                    binding.rcvList.visibility=View.GONE
-                }
             }
         })
         viewModel.isDataLoadingError.observe(viewLifecycleOwner) { isDataLoadingError ->
             isDataLoadingError?.let {
-                binding.tvError.visibility = if (it) View.VISIBLE else View.GONE
+                if(it){
+                    binding.rcvList.visibility=View.VISIBLE
+                    binding.tvError.visibility=View.VISIBLE
+                }else{
+                    binding.rcvList.visibility=View.GONE
+                    binding.tvError.visibility=View.GONE
+                }
             }
         }
     }
