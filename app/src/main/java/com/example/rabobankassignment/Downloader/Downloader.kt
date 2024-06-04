@@ -1,5 +1,7 @@
 package com.example.rabobankassignment.Downloader
+import com.example.rabobankassignment.data.model.Result
+import java.net.URI
 
 interface Downloader {
-    fun downloadFile(url: String): Long
+    suspend fun downloadFile(url: String): Result<String>
 }
