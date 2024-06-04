@@ -19,7 +19,7 @@ object Validator {
             val localDateTime = LocalDateTime.parse(array[3].replace("\"",""), formatter)
             val date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant())
         }catch (ex:Exception){
-            return Result.Error(Exception("Date is wrong format"))
+            return Result.Error(Exception("Date format is wrong"))
         }
         return Result.Success("")
     }
