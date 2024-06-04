@@ -24,8 +24,7 @@ object AppModule {
     @Singleton
     @Provides
     fun provideFileDownloader(@ApplicationContext context: Context,ioDispatcher: CoroutineDispatcher):FileDownloader{
-        val downloadManager = context.getSystemService(DownloadManager::class.java)
-        return FileDownloader(downloadManager,context,ioDispatcher)
+        return FileDownloader(context,ioDispatcher)
     }
 }
 

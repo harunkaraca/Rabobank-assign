@@ -48,7 +48,7 @@ class Repository(
 
     private fun fetchDataFromFile(filePath:String): Result<List<Issue>> {
         val resultList: MutableList<Issue> = mutableListOf()
-        val file= Environment.getExternalStoragePublicDirectory(filePath);
+        val file= File(filePath)
         val inputStream: InputStream = FileInputStream(file)
         val reader = BufferedReader(InputStreamReader(inputStream))
         try {
