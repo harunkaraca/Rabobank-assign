@@ -3,6 +3,8 @@ package com.example.rabobankassignment.di
 import android.app.DownloadManager
 import android.content.Context
 import com.example.rabobankassignment.Downloader.FileDownloader
+import com.example.rabobankassignment.data.BaseRepository
+import com.example.rabobankassignment.data.Repository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,5 +26,11 @@ object AppModule {
     fun provideFileDownloader(@ApplicationContext context: Context,ioDispatcher: CoroutineDispatcher):FileDownloader{
         val downloadManager = context.getSystemService(DownloadManager::class.java)
         return FileDownloader(downloadManager,context,ioDispatcher)
+    }
+
+    @Singleton
+    @Provides
+    fun provideRepository(fileDownloader: FileDownloader,ioDispatcher: CoroutineDispatcher):BaseRepository{
+        return Repository(fileDownloader,ioDispatcher)
     }
 }
