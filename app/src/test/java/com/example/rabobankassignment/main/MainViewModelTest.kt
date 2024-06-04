@@ -31,7 +31,7 @@ class MainViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    // Executes each task synchronously using Architecture Components.
+    // Executes each operation synchronously using Architecture Components.
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
@@ -49,7 +49,11 @@ class MainViewModelTest {
     fun `Should return issues`() = runTest {
         mainViewModel.downloadFile("")
         mainViewModel.items.observeForTesting {
+            // Then progress indicator is hidden
+            assertThat(mainViewModel.dataLoading.getOrAwaitValue()).isTrue()
+            advanceUntilIdle()
             // And the list of items is empty
+            assertThat(mainViewModel.dataLoading.getOrAwaitValue()).isFalse()
             assertThat(mainViewModel.items.getOrAwaitValue()).isNotEmpty()
         }
     }
@@ -58,8 +62,14 @@ class MainViewModelTest {
         repository.setReturnError(true)
         mainViewModel.downloadFile("")
         mainViewModel.items.observeForTesting {
+            // Then progress indicator is hidden
+            assertThat(mainViewModel.dataLoading.getOrAwaitValue()).isTrue()
             // And the list of items is empty
             assertThat(mainViewModel.items.getOrAwaitValue()).isEmpty()
+            // And the snackbar updated
+            advanceUntilIdle()
+            assertThat(mainViewModel.dataLoading.getOrAwaitValue()).isFalse()
+            assertThat(mainViewModel.snackbarText.getOrAwaitValue()).isNotNull()
         }
     }
 }
