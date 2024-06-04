@@ -34,6 +34,7 @@ class MainViewModel@Inject constructor(private val repository: BaseRepository):V
         _snackbarText.value = Event(message)
     }
     fun downloadFile(url:String){
+        _dataLoading.value = true
         viewModelScope.launch {
             val result=repository.downloadFile(url)
             if(result is Result.Success){
