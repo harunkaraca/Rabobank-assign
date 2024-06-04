@@ -63,8 +63,14 @@ class MainFragment : Fragment() {
         view?.setupSnackbar(viewLifecycleOwner, viewModel.snackbarText, Snackbar.LENGTH_LONG)
         viewModel.items.observe(viewLifecycleOwner, Observer {datas->
             datas?.let {
-                binding.rcvList.visibility=View.VISIBLE
-                issueAdapter.updateDatas(it)
+                if(it.isNotEmpty()){
+                    binding.rcvList.visibility=View.VISIBLE
+                    issueAdapter.updateDatas(it)
+                }
+                else{
+                    binding.rcvList.visibility=View.INVISIBLE
+                    issueAdapter.updateDatas(it)
+                }
             }
         })
         viewModel.dataLoading.observe(viewLifecycleOwner, Observer {isLoading->
