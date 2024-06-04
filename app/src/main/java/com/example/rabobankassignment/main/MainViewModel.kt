@@ -46,6 +46,7 @@ class MainViewModel@Inject constructor(private val repository: BaseRepository):V
             }else{
                 _isDataLoadingError.value = false
                 _items.value = emptyList()
+                showSnackbarMessage("Illegal state")
             }
             _dataLoading.value = false
         }
