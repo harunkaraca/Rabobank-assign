@@ -27,7 +27,7 @@ fun assertLiveDataEventTriggered(
     assertEquals(value.getContentIfNotHandled(), taskId)
 }
 
-fun assertSnackbarMessage(snackbarLiveData: LiveData<Event<Int>>, messageId: Int) {
-    val value: Event<Int> = snackbarLiveData.getOrAwaitValue()
+fun assertSnackbarMessage(snackbarLiveData: LiveData<Event<String>>, messageId: Int) {
+    val value: Event<String> = snackbarLiveData.getOrAwaitValue()
     assertEquals(value.getContentIfNotHandled(), messageId)
 }
