@@ -37,7 +37,7 @@ class FileDownloader internal constructor(private val context: Context,private v
 
     private fun performFileDownload(fileUrl: String): Result<String> {
         try {
-            val downloadTarget = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileUrl.fileName())
+            val downloadTarget = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileUrl.fileName())
             val connection = URL(fileUrl).openConnection() as HttpURLConnection
             val contentLength = connection.contentLength
             val inputStream = BufferedInputStream(connection.inputStream)

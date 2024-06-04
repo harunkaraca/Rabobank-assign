@@ -60,7 +60,6 @@ class MainFragment : Fragment() {
                 viewModel.showSnackbarMessage(getString(R.string.url_can_not_be_empty))
             }
         }
-        checkStoragePermission()
     }
 
     private fun observeViewModel() {
@@ -92,48 +91,6 @@ class MainFragment : Fragment() {
                     binding.rcvList.visibility=View.GONE
                     binding.tvError.visibility=View.GONE
                 }
-            }
-        }
-    }
-
-    private val requestPermissionsLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        val writePermissionGranted = permissions[android.Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: false
-        val readPermissionGranted = permissions[android.Manifest.permission.READ_EXTERNAL_STORAGE] ?: false
-
-        if (writePermissionGranted && readPermissionGranted) {
-            // Permissions granted
-            binding.btnDownload.isEnabled=true
-        } else {
-            // Permissions denied
-            viewModel.showSnackbarMessage(getString(R.string.permissions_denied_to_read_write_external_storage))
-        }
-    }
-    private fun checkStoragePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            binding.btnDownload.isEnabled = true
-        } else {
-            // For Android versions below Q, request both READ and WRITE permissions
-            val hasWritePermission = ContextCompat.checkSelfPermission(
-                requireContext(),
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
-
-            val hasReadPermission = ContextCompat.checkSelfPermission(
-                requireContext(),
-                android.Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
-
-            if (!hasWritePermission || !hasReadPermission) {
-                requestPermissionsLauncher.launch(
-                    arrayOf(
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        android.Manifest.permission.READ_EXTERNAL_STORAGE
-                    )
-                )
-            } else {
-                binding.btnDownload.isEnabled = true
             }
         }
     }
