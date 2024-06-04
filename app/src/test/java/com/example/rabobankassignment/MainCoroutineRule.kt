@@ -53,7 +53,7 @@ import kotlin.coroutines.ContinuationInterceptor
  * ```
  */
 @ExperimentalCoroutinesApi
-class MainCoroutineRule(private val dispatcher: TestDispatcher = UnconfinedTestDispatcher()) : TestWatcher() {
+class MainCoroutineRule(private val dispatcher: TestDispatcher = StandardTestDispatcher()) : TestWatcher() {
 
     override fun starting(description: Description?) {
         super.starting(description)
