@@ -27,7 +27,11 @@ object AppModule {
         val downloadManager = context.getSystemService(DownloadManager::class.java)
         return FileDownloader(downloadManager,context,ioDispatcher)
     }
+}
 
+@Module
+@InstallIn(SingletonComponent::class)
+object RepositoryModule {
     @Singleton
     @Provides
     fun provideRepository(fileDownloader: FileDownloader,ioDispatcher: CoroutineDispatcher):BaseRepository{
