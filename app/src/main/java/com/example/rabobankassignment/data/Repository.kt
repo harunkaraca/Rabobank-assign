@@ -3,7 +3,9 @@ package com.example.rabobankassignment.data
 import android.os.Environment
 import android.util.Log
 import com.example.rabobankassignment.Downloader.FileDownloader
+import com.example.rabobankassignment.data.model.Headers
 import com.example.rabobankassignment.data.model.Issue
+import com.example.rabobankassignment.data.model.IssueDetail
 import com.example.rabobankassignment.data.model.Result
 import com.example.rabobankassignment.data.model.succeeded
 import com.example.rabobankassignment.util.wrapEspressoIdlingResource
@@ -23,14 +25,14 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Date
-
+import com.example.rabobankassignment.util.Validator
 
 class Repository(
     private val fileDownloader: FileDownloader,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ):BaseRepository {
     private val TAG="Repository"
-    override suspend fun downloadFile(url:String): Result<List<Issue>> {
+    override suspend fun downloadFile(url:String): Result<Issue> {
         wrapEspressoIdlingResource {
             return withContext(ioDispatcher){
                 val result=fileDownloader.downloadFile(url)
@@ -46,38 +48,57 @@ class Repository(
         }
     }
 
-    private fun fetchDataFromFile(filePath:String): Result<List<Issue>> {
-        val resultList: MutableList<Issue> = mutableListOf()
+    private fun fetchDataFromFile(filePath:String): Result<Issue> {
+
         val file= File(filePath)
         val inputStream: InputStream = FileInputStream(file)
         val reader = BufferedReader(InputStreamReader(inputStream))
         try {
             var csvLine=""
-            val headerLine=reader.readLine()
-            while ((reader.readLine()?.also { csvLine = it }) != null) {
+            lateinit var headers:Headers
+            reader.readLine()?.also {
+                csvLine = it
                 val row = csvLine.split(",".toRegex()).dropLastWhile { it.isEmpty() }
                     .toTypedArray()
-                val result= com.example.rabobankassignment.util.Validator.checkArrayValidForImportedCSV(row)
+                val result= Validator.checkHeaderArrayValidForImportedCSV(row)
                 if(result is Result.Success){
-                    val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
-                    val localDateTime = LocalDateTime.parse(row[3].replace("\"",""), formatter)
-                    val date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant())
-                    val issue=Issue(row[0].replace("\"",""),
-                        row[1].replace("\"",""),
-                        row[2].toInt(),
-                        date,
-                        row[4].replace("\"",""))
-                    resultList.add(issue)
+                    headers=Headers(
+                        "${row[0].replace("\"","")} :",
+                        "${row[1].replace("\"","")} :",
+                        "${row[2].replace("\"","")} :",
+                        "${row[3].replace("\"","")} :")
                 }else{
                     return result as Result.Error
                 }
             }
+            val issueDetails:MutableList<IssueDetail> = mutableListOf()
+            while ((reader.readLine()?.also { csvLine = it }) != null) {
+                val row = csvLine.split(",".toRegex()).dropLastWhile { it.isEmpty() }
+                    .toTypedArray()
+                val result= Validator.checkArrayValidForImportedCSV(row)
+                if(result is Result.Success){
+                    val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+                    val localDateTime = LocalDateTime.parse(row[3].replace("\"",""), formatter)
+                    val date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant())
+                    val issue=IssueDetail(row[0].replace("\"",""),
+                        row[1].replace("\"",""),
+                        row[2].toInt(),
+                        date,
+                        row[4].replace("\"",""))
+                    issueDetails.add(issue)
+                }else{
+                    return result as Result.Error
+                }
+            }
+            inputStream.close()
+            var resultList= Issue(headers,issueDetails)
+            return Result.Success(resultList)
         } catch (ex: Exception) {
             inputStream.close()
             Timber.tag(TAG).e("Error in fetchDataFromFile ${ex.message}")
             return Result.Error(Exception("Error while reading CSV file"))
         }
-        inputStream.close()
-        return Result.Success(resultList)
+
+
     }
 }

@@ -1,32 +1,26 @@
 package com.example.rabobankassignment.main
 
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.rabobankassignment.R
 import com.example.rabobankassignment.adapter.IssueAdapter
+import com.example.rabobankassignment.data.model.Issue
 import com.example.rabobankassignment.databinding.FragmentMainBinding
 import com.example.rabobankassignment.util.setupSnackbar
-import com.example.rabobankassignment.util.showSnackbar
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.jar.Manifest
 
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
     private val viewModel by viewModels<MainViewModel>()
-    private val issueAdapter= IssueAdapter(arrayListOf())
+    private val issueAdapter= IssueAdapter(Issue())
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
@@ -65,7 +59,7 @@ class MainFragment : Fragment() {
         view?.setupSnackbar(viewLifecycleOwner, viewModel.snackbarText, Snackbar.LENGTH_LONG)
         viewModel.items.observe(viewLifecycleOwner, Observer {datas->
             datas?.let {
-                if(it.isNotEmpty()){
+                if(it.issues.isNotEmpty()){
                     binding.rcvList.visibility=View.VISIBLE
                     issueAdapter.updateDatas(it)
                 }

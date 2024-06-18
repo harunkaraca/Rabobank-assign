@@ -1,31 +1,33 @@
 package com.example.rabobankassignment.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.rabobankassignment.R
+import com.example.rabobankassignment.data.model.Headers
 import com.example.rabobankassignment.data.model.Issue
+import com.example.rabobankassignment.data.model.IssueDetail
 import com.example.rabobankassignment.databinding.ItemIssueBinding
 import com.example.rabobankassignment.util.getProgressDrawable
 import com.example.rabobankassignment.util.loadImage
 
-class IssueAdapter (var datas:MutableList<Issue>): RecyclerView.Adapter<IssueAdapter.IssueViewHolder>() {
+class IssueAdapter (var datas:Issue): RecyclerView.Adapter<IssueAdapter.IssueViewHolder>() {
 
-    fun updateDatas(newDatas:List<Issue>){
-        datas.clear()
-        datas.addAll(newDatas)
+    fun updateDatas(newDatas:Issue){
+        datas.issues.clear()
+        datas=newDatas
         notifyDataSetChanged()
     }
 
     class IssueViewHolder(private val binding:ItemIssueBinding): RecyclerView.ViewHolder(binding.root){
         private val progressDrawable= getProgressDrawable(binding.root.context)
-        fun bind(issue: Issue){
+        fun bind(headers: Headers,issue: IssueDetail){
+            binding.tvTitleFirstName.text = headers.firstName
             binding.tvFirstName.text=issue.firstName
+            binding.tvTitleSurname.text = headers.surName
             binding.tvSurname.text=issue.surName
+            binding.tvTitleIssueCount.text = headers.issueCount
             binding.tvIssueCount.text=issue.issueCount.toString()
+            binding.tvTitleDate.text = headers.dateOfBirth
             binding.tvDate.text=issue.dateOfBirth.toString()
             binding.ivAvatar.loadImage(issue.avatarUrl,progressDrawable)
         }
@@ -37,9 +39,9 @@ class IssueAdapter (var datas:MutableList<Issue>): RecyclerView.Adapter<IssueAda
     }
 
     override fun onBindViewHolder(holder: IssueViewHolder, position: Int) {
-        holder.bind(datas[position])
+        holder.bind(datas.headers,datas.issues[position])
     }
 
-    override fun getItemCount()=datas.size
+    override fun getItemCount()=datas.issues.size
 
 }

@@ -17,8 +17,8 @@ import com.example.rabobankassignment.data.model.Result
 @HiltViewModel
 class MainViewModel@Inject constructor(private val repository: BaseRepository):ViewModel() {
 
-    private val _items = MutableLiveData<List<Issue>>().apply { value = emptyList() }
-    val items: LiveData<List<Issue>> = _items
+    private val _items = MutableLiveData<Issue>()
+    val items: LiveData<Issue> = _items
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
@@ -45,7 +45,6 @@ class MainViewModel@Inject constructor(private val repository: BaseRepository):V
                 result.exception.message?.let { showSnackbarMessage(it) }
             }else{
                 _isDataLoadingError.value = false
-                _items.value = emptyList()
                 showSnackbarMessage("Illegal state")
             }
             _dataLoading.value = false

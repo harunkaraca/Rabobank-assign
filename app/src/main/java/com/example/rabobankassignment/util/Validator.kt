@@ -23,4 +23,10 @@ object Validator {
         }
         return Result.Success("")
     }
+    fun checkHeaderArrayValidForImportedCSV(array:Array<String>): Result<String> {
+        if(array.size!=5){
+            return Result.Error(Exception("Missing data in line"))
+        }
+        return Result.Success("")
+    }
 }
