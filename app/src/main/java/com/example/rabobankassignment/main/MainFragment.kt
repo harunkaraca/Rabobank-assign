@@ -55,7 +55,6 @@ class MainFragment : Fragment() {
         binding.btnDownload.setOnClickListener {
             if(binding.etUrl.text.toString().isNotEmpty()){
                 viewModel.downloadFile(binding.etUrl.text.toString())
-                it.isEnabled=false
             }else{
                 viewModel.showSnackbarMessage(getString(R.string.url_can_not_be_empty))
             }
@@ -78,8 +77,13 @@ class MainFragment : Fragment() {
         })
         viewModel.dataLoading.observe(viewLifecycleOwner, Observer {isLoading->
             isLoading?.let {
-                binding.btnDownload.isEnabled=true
-                binding.clProgress.visibility=if(it)View.VISIBLE else View.GONE
+                if(it){
+                    binding.btnDownload.isEnabled=false
+                    binding.clProgress.visibility=View.VISIBLE
+                }else{
+                    binding.btnDownload.isEnabled=true
+                    binding.clProgress.visibility=View.GONE
+                }
             }
         })
         viewModel.isDataLoadingError.observe(viewLifecycleOwner) { isDataLoadingError ->
