@@ -84,12 +84,12 @@ class MainFragment : Fragment() {
         })
         viewModel.isDataLoadingError.observe(viewLifecycleOwner) { isDataLoadingError ->
             isDataLoadingError?.let {
-                if(it){
+                if(!it){
                     binding.rcvList.visibility=View.VISIBLE
-                    binding.tvError.visibility=View.VISIBLE
+                    binding.tvError.visibility=View.GONE
                 }else{
                     binding.rcvList.visibility=View.GONE
-                    binding.tvError.visibility=View.GONE
+                    binding.tvError.visibility=View.VISIBLE
                 }
             }
         }
